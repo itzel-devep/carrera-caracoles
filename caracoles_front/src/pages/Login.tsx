@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { useNavigate, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export const Login = () => {
   const [correo, setCorreo] = useState('');
@@ -10,17 +11,16 @@ export const Login = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Local mock login: retrieve from users in localstorage if needed,
-    // or just mock a successful login if the user was just registered.
     const usersStr = localStorage.getItem('mock_users');
     const users = usersStr ? JSON.parse(usersStr) : [];
 
     const user = users.find((u: any) => u.correo === correo && u.password === password);
     if (user) {
+      toast.success(`¡Bienvenido ${user.nombre_completo}!`);
       login({ id: user.id, nombre_completo: user.nombre_completo, correo: user.correo });
       navigate('/dashboard');
     } else {
-      alert('Credenciales incorrectas');
+      toast.error('Credenciales incorrectas');
     }
   };
 

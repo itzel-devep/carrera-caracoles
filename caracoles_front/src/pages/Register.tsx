@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import toast from 'react-hot-toast';
 
 export const Register = () => {
   const [nombre, setNombre] = useState('');
@@ -12,7 +13,7 @@ export const Register = () => {
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      alert('Las contraseñas no coinciden');
+      toast.error('Las contraseñas no coinciden');
       return;
     }
 
@@ -20,7 +21,7 @@ export const Register = () => {
     const users = usersStr ? JSON.parse(usersStr) : [];
 
     if (users.find((u: any) => u.correo === correo)) {
-      alert('El correo ya está registrado');
+      toast.error('El correo ya está registrado');
       return;
     }
 
@@ -31,7 +32,7 @@ export const Register = () => {
       password
     });
     localStorage.setItem('mock_users', JSON.stringify(users));
-    alert('Registro exitoso. Ahora inicia sesión.');
+    toast.success('Registro exitoso. Ahora inicia sesión.');
     navigate('/');
   };
 

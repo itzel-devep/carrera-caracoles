@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useAuthStore } from '../store/authStore';
-import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import toast from 'react-hot-toast';
 
 const apuestasData = [
-  { name: 'Ganadas', value: 15 },
-  { name: 'Perdidas', value: 10 },
+  { name: 'Ganadas', value: 15, fill: '#22c55e' },
+  { name: 'Perdidas', value: 10, fill: '#ef4444' },
 ];
-const COLORS = ['#22c55e', '#ef4444'];
 
 const carrerasData = [
   { name: 'Rayo', victorias: 2 },
@@ -32,7 +32,7 @@ export const Dashboard = () => {
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    if (tarjeta !== '1234123412341234') newErrors.tarjeta = 'Tarjeta inválida para prueba';
+    if (tarjeta !== '1234123412341234') newErrors.tarjeta = 'Tarjeta inválida';
     if (!/^\d{2}\/\d{2}$/.test(vencimiento)) newErrors.vencimiento = 'Usa formato MM/AA ';
     else if (vencimiento !== '12/26') newErrors.vencimiento = 'Vencimiento inválido';
     if (cvv !== '543') newErrors.cvv = 'CVV inválido';
@@ -65,13 +65,13 @@ export const Dashboard = () => {
 
       if (response.ok && data.status === 'approved') {
         updateBalance(data.transaction_amount);
-        alert('Recarga exitosa. Operación: ' + data.id);
+        toast.success('Recarga exitosa');
         setShowModal(false);
       } else {
-        alert('Error en recarga (Backend): ' + (data.status_detail || 'Transacción rechazada'));
+        toast.error('Error al recargar');
       }
     } catch (err) {
-      alert('Error de conexión con SnailPay');
+      toast.error('Error de conexión');
     } finally {
       setLoading(false);
     }
@@ -117,11 +117,7 @@ export const Dashboard = () => {
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
-                  <Pie data={apuestasData} innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value">
-                    {apuestasData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
+                  <Pie data={apuestasData} innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value" />
                   <Tooltip />
                   <Legend />
                 </PieChart>
@@ -156,18 +152,18 @@ export const Dashboard = () => {
               </div>
               <div>
                 <label className="text-sm font-medium">Tarjeta</label>
-                <input required placeholder="1234123412341234" value={tarjeta} onChange={e => setTarjeta(e.target.value)} className={`w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.tarjeta ? 'border-red-500' : 'border-gray-300'}`} />
+                <input required placeholder="Número de tarjeta a 16 dígitos" value={tarjeta} onChange={e => setTarjeta(e.target.value)} className={`w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.tarjeta ? 'border-red-500' : 'border-gray-300'}`} />
                 {errors.tarjeta && <p className="text-red-500 text-xs mt-1">{errors.tarjeta}</p>}
               </div>
               <div className="flex gap-2">
                 <div className="w-1/2">
                   <label className="text-sm font-medium">Vencimiento</label>
-                  <input required placeholder="12/26" value={vencimiento} onChange={e => setVencimiento(e.target.value)} className={`w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.vencimiento ? 'border-red-500' : 'border-gray-300'}`} />
+                  <input required placeholder="MM/YY" value={vencimiento} onChange={e => setVencimiento(e.target.value)} className={`w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.vencimiento ? 'border-red-500' : 'border-gray-300'}`} />
                   {errors.vencimiento && <p className="text-red-500 text-xs mt-1">{errors.vencimiento}</p>}
                 </div>
                 <div className="w-1/2">
                   <label className="text-sm font-medium">CVV</label>
-                  <input required placeholder="543" value={cvv} onChange={e => setCvv(e.target.value)} className={`w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.cvv ? 'border-red-500' : 'border-gray-300'}`} />
+                  <input required placeholder="CVV" value={cvv} onChange={e => setCvv(e.target.value)} className={`w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.cvv ? 'border-red-500' : 'border-gray-300'}`} />
                   {errors.cvv && <p className="text-red-500 text-xs mt-1">{errors.cvv}</p>}
                 </div>
               </div>
