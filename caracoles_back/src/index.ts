@@ -11,7 +11,11 @@ app.use(cors({
 }));
 app.use(express.json());
 
-app.use('/api/snailpay', snailpayRoutes);
+app.use(['/api/snailpay', '/snailpay'], snailpayRoutes);
+
+app.get(['/api/health', '/health'], (req, res) => {
+  res.status(200).json({ status: 'ok', message: 'Backend is running on Vercel!' });
+});
 
 const PORT = process.env.PORT || 3001;
 
@@ -22,3 +26,4 @@ if (require.main === module) {
 }
 
 export default app;
+module.exports = app;
