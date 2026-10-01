@@ -1,0 +1,27 @@
+{
+    "$schema": "https://openapi.vercel.sh/vercel.json",
+    "services": {
+        "caracoles_back": {
+            "root": "caracoles_back",
+            "framework": "express"
+        },
+        "caracoles_front": {
+            "root": "caracoles_front",
+            "framework": "vite"
+        }
+    },
+    "rewrites": [
+        {
+            "source": "/api/(.*)",
+            "destination": {
+                "service": "caracoles_back"
+            }
+        },
+        {
+            "source": "/(.*)",
+            "destination": {
+                "service": "caracoles_front"
+            }
+        }
+    ]
+}
