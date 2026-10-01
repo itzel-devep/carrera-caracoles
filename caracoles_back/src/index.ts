@@ -17,6 +17,16 @@ app.get(['/api/health', '/health'], (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Backend is running on Vercel!' });
 });
 
+// Fallback para depurar qué URL está recibiendo Express realmente en Vercel
+app.use((req, res) => {
+  res.status(404).json({
+    error: 'Ruta no encontrada por Express',
+    method: req.method,
+    url: req.url,
+    originalUrl: req.originalUrl
+  });
+});
+
 const PORT = process.env.PORT || 3001;
 
 if (require.main === module) {
