@@ -43,7 +43,8 @@ export const SnailPayModal: React.FC<SnailPayModalProps> = ({ isOpen, onClose, u
     setErrors({});
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const RAW_API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const API_URL = RAW_API_URL.replace(/\/+$/, ''); // Quita diagonales al final si el usuario las puso
       const response = await fetch(`${API_URL}/api/snailpay/charge`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
