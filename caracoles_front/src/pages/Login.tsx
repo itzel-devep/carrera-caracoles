@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAuthStore } from '../store/authStore';
 import { useNavigate, Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -17,7 +17,7 @@ export const Login = () => {
     const user = users.find((u: any) => u.correo === correo && u.password === password);
     if (user) {
       toast.success(`¡Bienvenido ${user.nombre_completo}!`);
-      login({ id: user.id, nombre_completo: user.nombre_completo, correo: user.correo });
+      login({ id: user.id, nombre_completo: user.nombre_completo, correo: user.correo, saldo: user.saldo || 0 });
       navigate('/dashboard');
     } else {
       toast.error('Credenciales incorrectas');

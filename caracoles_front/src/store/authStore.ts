@@ -1,10 +1,11 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 interface User {
   id: string;
   nombre_completo: string;
   correo: string;
+  saldo?: number;
 }
 
 interface AuthState {
@@ -22,12 +23,13 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       balance: 0,
       isAuthenticated: false,
-      login: (user) => set({ user, isAuthenticated: true }),
+      login: (user) => set({ user, isAuthenticated: true, balance: user.saldo || 0 }),
       logout: () => set({ user: null, isAuthenticated: false, balance: 0 }),
-      updateBalance: (amount) => set((state) => ({ balance: state.balance + amount })),
+      updateBalance: (amount) => set((state) => ({ balance: Number(state.balance) + Number(amount) })),
     }),
     {
       name: 'carrera-caracoles-auth',
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );
