@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'crypto';
 
 export const chargeBalance = (req: Request, res: Response) => {
   const {
@@ -15,7 +15,7 @@ export const chargeBalance = (req: Request, res: Response) => {
   // Simulate System Error (e.g., if monto is exactly 999)
   if (monto === 999) {
     return res.status(500).json({
-      id: uuidv4(),
+      id: randomUUID(),
       status: 'error',
       status_detail: 'internal_system_error',
       transaction_amount: monto,
@@ -37,7 +37,7 @@ export const chargeBalance = (req: Request, res: Response) => {
 
   if (isSuccess) {
     return res.json({
-      id: uuidv4(),
+      id: randomUUID(),
       status: 'approved',
       status_detail: 'accredited',
       transaction_amount: monto,
@@ -50,7 +50,7 @@ export const chargeBalance = (req: Request, res: Response) => {
   } else {
     // Transaction Error
     return res.status(400).json({
-      id: uuidv4(),
+      id: randomUUID(),
       status: 'rejected',
       status_detail: 'cc_rejected_bad_filled_other',
       transaction_amount: monto,
